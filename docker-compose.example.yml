@@ -2,41 +2,52 @@ services:
   xray-checker:
     image: kutovoys/xray-checker
     container_name: xray-checker
-    restart: unless-stopped
+    restart: always
+    networks:
+      - xray-sp-network
     environment:
-      - SUBSCRIPTION_URL=https://example.com/sub
+      - SUBSCRIPTION_URL=CHANGE_ME
+      - PROXY_CHECK_INTERVAL=30
+      - PROXY_CHECK_METHOD=status
+      - PROXY_STATUS_CHECK_URL="http://cp.cloudflare.com/generate_204"
+      - PROXY_TIMEOUT=15
+      - SIMULATE_LATENCY=false
+      - WEB_PUBLIC=false
       - METRICS_PROTECTED=true
-      - METRICS_USERNAME=admin
+      - METRICS_USERNAME=CHANGE_ME
       - METRICS_PASSWORD=CHANGE_ME
-      - WEB_PUBLIC=true
-      - PROXY_CHECK_INTERVAL=60
-    ports:
-      - "127.0.0.1:2112:2112"
 
-  statuspage:
-    # Build the monorepo image locally...
-    build:
-      context: .
-      dockerfile: Dockerfile
-    # ...or pull a prebuilt image instead of building:
-    # image: ghcr.io/kastov/xray-sp:latest
-    container_name: statuspage
-    restart: unless-stopped
+  xray-sp:
+    image: ghcr.io/kastov/xray-sp:latest
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    container_name: xray-sp
+    restart: always
+    networks:
+      - xray-sp-network
     depends_on:
       - xray-checker
     environment:
-      - CHECKER_URL=http://xray-checker:2112
-      - POLL_INTERVAL=60
+      - POLL_INTERVAL=30
       - DAYS=30
       - TZ=Europe/Moscow
-      - TITLE=Статус серверов
-      - SUBTITLE=Доступность серверов в реальном времени
-      - DATA_DIR=/data
       # Change these before exposing /admin:
-      - ADMIN_USERNAME=admin
-      - ADMIN_PASSWORD=change-me-please
-      # - SESSION_SECRET=set-a-long-random-string
+      - ADMIN_USERNAME=CHANGE_ME
+      - ADMIN_PASSWORD=CHANGE_ME
     volumes:
-      - ./data:/data
+      - xray-sp-db-data:/data
     ports:
       - "127.0.0.1:8080:8080"
+
+volumes:
+  xray-sp-db-data:
+    name: xray-sp-db-data
+    driver: local
+    external: false
+
+networks:
+  xray-sp-network:
+    name: xray-sp-network
+    driver: bridge
+    external: false
