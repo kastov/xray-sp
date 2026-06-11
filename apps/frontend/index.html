@@ -7,16 +7,85 @@
     <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
     <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
     <meta name="referrer" content="no-referrer" />
-    <title>Статус серверов</title>
+    <title></title>
     <script>
-      // Apply persisted theme as early as possible to avoid a flash.
-      try {
-        var _t = localStorage.getItem("sp-theme");
-        if (_t) document.documentElement.setAttribute("data-theme", _t);
-      } catch (e) {}
+      (function () {
+        var doc = document.documentElement;
+        try {
+          var t = localStorage.getItem("sp-theme");
+          if (t) doc.setAttribute("data-theme", t);
+        } catch (e) {}
+        try {
+          var c = JSON.parse(localStorage.getItem("sp-config") || "null");
+          if (c) {
+            if (c.branding && c.branding.title) document.title = c.branding.title;
+            if (c.branding && c.branding.hasLogo) {
+              var link = document.createElement("link");
+              link.rel = "icon";
+              link.href = "/favicon.png?v=" + (c.branding.logoVersion || 0);
+              document.head.appendChild(link);
+            }
+            if (c.theme && c.theme.light && c.theme.dark) {
+              var vars = function (p) {
+                var s = "";
+                for (var k in p) s += "--" + k + ":" + p[k] + ";";
+                return s;
+              };
+              var st = document.createElement("style");
+              st.id = "sp-palette";
+              st.textContent =
+                ':root,html[data-theme="light"]{' +
+                vars(c.theme.light) +
+                "}" +
+                "@media (prefers-color-scheme: dark){:root:not([data-theme]){" +
+                vars(c.theme.dark) +
+                "}}" +
+                'html[data-theme="dark"]{' +
+                vars(c.theme.dark) +
+                "}";
+              document.head.appendChild(st);
+            }
+          }
+        } catch (e) {}
+      })();
     </script>
+    <style>
+      #sp-preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg, #16181d);
+        transition: opacity 0.25s ease;
+      }
+      #sp-preloader.sp-hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #sp-preloader .sp-spin {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 3px solid var(--line, #333a45);
+        border-top-color: var(--info, #5b8cff);
+        animation: sp-rot 0.7s linear infinite;
+      }
+      @keyframes sp-rot {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #sp-preloader .sp-spin {
+          animation: none;
+        }
+      }
+    </style>
   </head>
   <body>
+    <div id="sp-preloader"><div class="sp-spin"></div></div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
