@@ -3,13 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, nocache" />
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <meta name="referrer" content="no-referrer" />
     <title>Статус серверов</title>
     <script>
       // Apply persisted theme as early as possible to avoid a flash.
       try {
-        var _t = localStorage.getItem('sp-theme');
-        if (_t) document.documentElement.setAttribute('data-theme', _t);
+        var _t = localStorage.getItem("sp-theme");
+        if (_t) document.documentElement.setAttribute("data-theme", _t);
       } catch (e) {}
     </script>
   </head>
