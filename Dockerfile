@@ -6,11 +6,9 @@
 FROM node:22-slim AS builder
 ENV PNPM_HOME=/pnpm
 ENV PATH="$PNPM_HOME:$PATH"
+# lmdb / msgpackr-extract / esbuild ship prebuilt binaries for linux x64+arm64
+# (glibc), so no compiler toolchain is needed on this base image.
 RUN corepack enable
-# Build toolchain for native modules (lmdb). Prebuilt binaries are used when
-# available; these are a safety net for uncommon platforms.
-RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ \
-  && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 # Install dependencies first (better layer caching).
