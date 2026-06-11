@@ -1,0 +1,13 @@
+**/node_modules
+**/dist
+**/.turbo
+data
+.git
+.github
+*.log
+.env
+.env.local
+.DS_Store
+xray-checker-statuspage
+**/*.tsbuildinfo
+.pnpm-store

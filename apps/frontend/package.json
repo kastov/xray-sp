@@ -1,0 +1,31 @@
+{
+  "name": "@status/frontend",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "flags": "node scripts/fetch-flags.mjs",
+    "predev": "node scripts/fetch-flags.mjs",
+    "dev": "vite",
+    "prebuild": "node scripts/fetch-flags.mjs",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.2.5",
+    "@status/shared": "workspace:*",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.8",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "@vitejs/plugin-react": "^4.5.1",
+    "tailwindcss": "^4.1.8",
+    "typescript": "^5.7.2",
+    "vite": "^6.3.5"
+  }
+}

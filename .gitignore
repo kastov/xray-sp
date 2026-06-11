@@ -1,0 +1,23 @@
+node_modules/
+dist/
+build/
+data/
+*.log
+.env
+.env.local
+.DS_Store
+coverage/
+*.tsbuildinfo
+.pnpm-store/
+apps/backend/public/
+apps/frontend/public/flags/
+.claude/
+
+# Local working copies / reference (not published)
+docker-compose.yml
+xray-checker-statuspage/
+# Docker save artifacts
+status-page.tar
+status-page.tar.gz
+*.tar
+*.tar.gz

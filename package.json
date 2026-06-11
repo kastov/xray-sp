@@ -1,0 +1,22 @@
+{
+  "name": "status-page",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Modern status page for xray-checker (NestJS + React/TS/Tailwind)",
+  "scripts": {
+    "build:shared": "pnpm --filter @status/shared build",
+    "build:frontend": "pnpm --filter @status/frontend build",
+    "build:backend": "pnpm --filter @status/backend build",
+    "build": "pnpm run build:shared && pnpm run build:frontend && pnpm run build:backend",
+    "dev:backend": "pnpm --filter @status/backend start:dev",
+    "dev:frontend": "pnpm --filter @status/frontend dev",
+    "dev": "pnpm run build:shared && pnpm -r --parallel --filter @status/backend --filter @status/frontend run dev",
+    "start": "pnpm --filter @status/backend start:prod",
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "pnpm -r run lint"
+  },
+  "packageManager": "pnpm@11.1.3",
+  "engines": {
+    "node": ">=20"
+  }
+}

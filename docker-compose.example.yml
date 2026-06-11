@@ -1,0 +1,42 @@
+services:
+  xray-checker:
+    image: kutovoys/xray-checker
+    container_name: xray-checker
+    restart: unless-stopped
+    environment:
+      - SUBSCRIPTION_URL=https://example.com/sub
+      - METRICS_PROTECTED=true
+      - METRICS_USERNAME=admin
+      - METRICS_PASSWORD=CHANGE_ME
+      - WEB_PUBLIC=true
+      - PROXY_CHECK_INTERVAL=60
+    ports:
+      - "127.0.0.1:2112:2112"
+
+  statuspage:
+    # Build the monorepo image locally...
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # ...or pull a prebuilt image instead of building:
+    # image: ghcr.io/kastov/xray-sp:latest
+    container_name: statuspage
+    restart: unless-stopped
+    depends_on:
+      - xray-checker
+    environment:
+      - CHECKER_URL=http://xray-checker:2112
+      - POLL_INTERVAL=60
+      - DAYS=30
+      - TZ=Europe/Moscow
+      - TITLE=Статус серверов
+      - SUBTITLE=Доступность серверов в реальном времени
+      - DATA_DIR=/data
+      # Change these before exposing /admin:
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=change-me-please
+      # - SESSION_SECRET=set-a-long-random-string
+    volumes:
+      - ./data:/data
+    ports:
+      - "127.0.0.1:8080:8080"
